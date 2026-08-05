@@ -57,7 +57,7 @@ export const cacheLruLesson = makeLesson("lru", {
     "Least-recently-used eviction on the students table: recency list, hit→MRU, miss→evict the cold end.",
   teachTitle: "LRU tool",
   teachBody:
-    "Keep a recency stack. Hits move a page to MRU. When full, detach the page idle the longest. id 1 → RID (P1, slot 0) is Ada — she shares P1 with Bob, Cara, and Finn.",
+    "Keep a recency stack. Hits move a page to MRU. When full, detach the page idle the longest. A PK lookup is index page then heap page: Lookup(1) on P4, then RID (P1, slot 0) for Ada — she shares P1 with Bob, Cara, and Finn.",
 });
 
 export const cacheMruLesson = makeLesson("mru", {
@@ -107,7 +107,7 @@ export const cacheTwoQLesson = makeLesson("two-q", {
   level: "advanced",
   teachTitle: "2Q tool",
   teachBody:
-    "First visit → A1in (probation FIFO). Second visit → promote to Am (hot LRU). Prefer detaching from A1in so scan pages never thrash the hot set.",
+    "Simplified 2Q (no A1out ghost): first visit → A1in (probation FIFO). Re-hit while still cached → Am (hot LRU). Prefer detaching from A1in so scan junk dies first. Paper 2Q promotes on A1out ghost hits.",
 });
 
 export const cacheArcLesson = makeLesson("arc", {
@@ -120,7 +120,7 @@ export const cacheArcLesson = makeLesson("arc", {
   level: "advanced",
   teachTitle: "ARC tool",
   teachBody:
-    "T1 = recency, T2 = frequency. Ghosts B1/B2 remember evictions (no frame). Ghost hits slide target p. BusTub ArcReplacer is this family.",
+    "T1 = recency, T2 = frequency. Ghosts B1/B2 remember evictions (no frame). Ghost hits slide target p. BusTub ArcReplacer is this family (mru_/mfu_/ghosts), not a byte-identical paper clone.",
 });
 
 export const cachePolicyLessons: Lesson[] = [

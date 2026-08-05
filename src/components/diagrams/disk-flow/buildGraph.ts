@@ -205,13 +205,13 @@ export function buildDiskFlowGraph(
             highlight: folderHighlight === "data",
           },
           {
-            name: "bustub.wal",
-            value: "write-ahead log",
+            name: "bustub.log",
+            value: "WAL (DiskManager)",
             highlight: folderHighlight === "wal",
           },
           {
-            name: "catalog/",
-            value: "schema meta",
+            name: "catalog_",
+            value: "in-memory meta",
             highlight: folderHighlight === "catalog",
           },
           { name: "tmp/", value: "spill files" },

@@ -171,30 +171,33 @@ const TREE_ENTRIES = [
   },
   {
     id: "wal",
-    name: "bustub.wal",
+    name: "bustub.log",
     kind: "file" as const,
     role: "Write-ahead log",
-    detail: "Logged before page flush so crashes can recover committed work.",
+    detail:
+      "BusTub DiskManager names this <db>.log next to the .db file (not .wal). Logged before durable page flush.",
     icon: "log" as const,
     size: "append-only",
   },
   {
     id: "catalog",
-    name: "catalog/",
+    name: "catalog (in memory)",
     kind: "folder" as const,
-    role: "Metadata",
-    detail: "Maps table/index names → schemas and root page_ids.",
+    role: "Metadata · not a disk folder",
+    detail:
+      "In BusTub, Catalog is a C++ object (table/index names → schema + first_page_id). It is not a catalog/ directory on disk.",
     icon: "folder" as const,
-    size: "dir",
+    size: "RAM",
   },
   {
     id: "tmp",
     name: "tmp/",
     kind: "folder" as const,
-    role: "Spill files",
-    detail: "Temporary sort/hash spill when memory is tight.",
+    role: "Spill files (engines in general)",
+    detail:
+      "Sort/hash spill files exist in many production engines. BusTub student projects usually skip a tmp/ tree.",
     icon: "folder" as const,
-    size: "dir",
+    size: "optional",
   },
 ] as const;
 
@@ -455,10 +458,14 @@ export const FolderTreeCardNode = memo(function FolderTreeCardNode({
             </p>
             <div className="mt-auto border-t border-border pt-2">
               <p className="font-mono text-[9px] leading-snug text-subtle">
-                path: /var/lib/bustub/data/{entry.name}
+                path: {entry.id === "catalog"
+                  ? "Catalog catalog_ (in-process, not a folder)"
+                  : entry.id === "tmp"
+                    ? "(optional spill dir — not in BusTub DiskManager)"
+                    : `./${entry.name}`}
               </p>
               <p className="mt-1 text-[10px] text-muted">
-                Same idea on any OS: a folder of files the DBMS owns.
+                BusTub: one .db + one .log. Catalog is not a disk folder.
               </p>
             </div>
           </div>

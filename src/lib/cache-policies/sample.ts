@@ -65,17 +65,10 @@ export type AccessIntent = {
 
 export const ACCESS_INTENTS: AccessIntent[] = [
   {
-    pageId: 1,
-    sql: "SELECT * FROM students WHERE id = 1",
-    focusRowIds: [1],
-    why: "Ada’s row is on heap page P1",
-    ridNote: "id 1 is Ada. Her RID is (P1, slot 0) — page 1, first slot.",
-  },
-  {
     pageId: 4,
     sql: "idx_students_id.Lookup(1)",
     focusRowIds: [1],
-    why: "Index leaf maps the key to a RID",
+    why: "PK lookup reads the index leaf first",
     ridNote:
       "1 → (P1, slot 0) means: student id 1 lives on page P1 in slot 0 (Ada). The index does not store major or GPA.",
   },
@@ -83,21 +76,14 @@ export const ACCESS_INTENTS: AccessIntent[] = [
     pageId: 1,
     sql: "fetch RID (P1, slot 0)  — Ada",
     focusRowIds: [1],
-    why: "Second touch keeps the whole P1 page hot",
+    why: "Then the heap page named by the RID",
     ridNote: "Fetching Ada also keeps Bob, Cara, and Finn cached — they share P1.",
-  },
-  {
-    pageId: 2,
-    sql: "SELECT * FROM students WHERE id = 4",
-    focusRowIds: [4],
-    why: "Dan’s row is on heap page P2",
-    ridNote: "id 4 is Dan. RID (P2, slot 0).",
   },
   {
     pageId: 1,
     sql: "SELECT name FROM students WHERE id = 2",
     focusRowIds: [2],
-    why: "Bob shares P1 with Ada",
+    why: "Bob shares P1 — heap hit if P1 is still attached",
     ridNote: "id 2 → RID (P1, slot 1) = Bob. Same page as Ada, different slot.",
   },
   {
@@ -106,6 +92,20 @@ export const ACCESS_INTENTS: AccessIntent[] = [
     focusRowIds: [4],
     why: "Index again, now for Dan",
     ridNote: "4 → (P2, slot 0) = Dan. Key in the leaf, row still on the heap.",
+  },
+  {
+    pageId: 2,
+    sql: "fetch RID (P2, slot 0)  — Dan",
+    focusRowIds: [4],
+    why: "Heap follow after the index RID",
+    ridNote: "id 4 is Dan. RID (P2, slot 0).",
+  },
+  {
+    pageId: 4,
+    sql: "idx_students_id.Lookup(5)",
+    focusRowIds: [5],
+    why: "Index probe for Eve",
+    ridNote: "5 → (P2, slot 1) = Eve.",
   },
   {
     pageId: 2,
@@ -122,8 +122,15 @@ export const ACCESS_INTENTS: AccessIntent[] = [
     ridNote: "P5 is scan junk, not part of the students heap. Easy victim later.",
   },
   {
+    pageId: 4,
+    sql: "idx_students_id.Lookup(8)",
+    focusRowIds: [8],
+    why: "Index probe for Ivan",
+    ridNote: "8 → (P3, slot 0) = Ivan.",
+  },
+  {
     pageId: 3,
-    sql: "SELECT * FROM students WHERE id = 8",
+    sql: "fetch RID (P3, slot 0)  — Ivan",
     focusRowIds: [8],
     why: "Ivan lives on colder heap P3",
     ridNote: "id 8 → RID (P3, slot 0) = Ivan. P3 also holds Jade, Kai, Lia.",

@@ -259,8 +259,8 @@ export function getPageDossier(pageId: number): PageDossier {
             },
             {
               name: "size",
-              value: "2 keys (sample)",
-              why: "How many live key/RID pairs are stored on this leaf.",
+              value: "5 keys (sample students)",
+              why: "How many live key/RID pairs are stored on this leaf in the disk lesson sample (Ada…Eve).",
             },
             {
               name: "max_size",
@@ -286,9 +286,24 @@ export function getPageDossier(pageId: number): PageDossier {
               why: "Lookup id=1 → open P1, read slot 0 — no table scan.",
             },
             {
-              name: "key[1] = 4",
+              name: "key[1] = 2",
+              value: "RID (1, 1) → Bob",
+              why: "Same heap page as Ada, next slot.",
+            },
+            {
+              name: "key[2] = 3",
+              value: "RID (1, 2) → Cara",
+              why: "Still on P1.",
+            },
+            {
+              name: "key[3] = 4",
               value: "RID (2, 0) → Dan",
               why: "id=4 lives on a different heap page (P2).",
+            },
+            {
+              name: "key[4] = 5",
+              value: "RID (2, 1) → Eve",
+              why: "Shares P2 with Dan.",
             },
           ],
         },

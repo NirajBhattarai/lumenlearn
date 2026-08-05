@@ -58,7 +58,7 @@ export const POLICY_META: Record<
   "lru-k": {
     name: "LRU-K",
     short: "K-th last access (K=2)",
-    rule: "Evict the page with the oldest K-th access time. Correlated references resist eviction better than plain LRU.",
+    rule: "Teaching K=2: evict the resident page whose 2nd-most-recent access is oldest. (O’Neil LRU-K also has a correlated-reference window; BusTub’s LRUK_REPLACER_K default is 10, and P1 BPM uses ArcReplacer.)",
     wikiUrl: "https://en.wikipedia.org/wiki/Cache_replacement_policies#LRU-K",
   },
   clock: {
@@ -69,14 +69,14 @@ export const POLICY_META: Record<
   },
   "two-q": {
     name: "2Q",
-    short: "Two queues (A1in + Am)",
-    rule: "First touch → A1in (FIFO). Re-reference → Am (LRU). Prefer victims from A1in so one-hit wonders die first.",
+    short: "Two queues (simplified)",
+    rule: "Teaching 2Q: first touch → A1in (FIFO); re-hit while resident → Am (LRU). Paper 2Q (Johnson & Shasha) also keeps an A1out ghost list and promotes on ghost hit, not only on a second in-cache touch.",
     wikiUrl: "https://en.wikipedia.org/wiki/Cache_replacement_policies#2Q",
   },
   arc: {
     name: "ARC",
     short: "Adaptive Replacement Cache",
-    rule: "Balance recency (T1) vs frequency (T2) using ghost lists B1/B2. Target p adapts on ghost hits.",
+    rule: "Teaching ARC: T1 recency, T2 frequency, ghosts B1/B2, target p. BusTub ArcReplacer is the same family (mru_/mfu_/ghosts + mru_target_size_) with course-specific AccessType hooks — not a line-for-line Megiddo–Modha clone.",
     wikiUrl: "https://en.wikipedia.org/wiki/Adaptive_replacement_cache",
   },
 };

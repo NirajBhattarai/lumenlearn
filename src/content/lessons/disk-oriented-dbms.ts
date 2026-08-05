@@ -20,13 +20,13 @@ export const diskOrientedDbmsLesson: Lesson = {
       id: "hook",
       title: "Disk holds the database as files",
       caption:
-        "On a real machine the DBMS owns a folder on disk. Open data/ like a Finder window: bustub.db, bustub.wal, catalog/. Click each entry. RAM on the right only caches pages later.",
+        "BusTub’s DiskManager uses a .db file plus a sibling .log. Catalog lives in memory (names → first_page_id), not a catalog/ folder. Click each entry — RAM frames on the right stay empty until pages are cached.",
       durationMs: 7000,
       visual: {
         component: "DiskOrientedScene",
         props: {
           focus: "overview",
-          annotation: "SSD → /var/lib/bustub/data/ · click files in the tree",
+          annotation: "DiskManager: bustub.db + bustub.log · catalog is in RAM",
           folderHighlight: "data",
           frames: [
             { frameId: 0, pageId: null },
@@ -42,8 +42,8 @@ export const diskOrientedDbmsLesson: Lesson = {
           text: "Truth is files under data/ — not scattered bytes in RAM.",
         },
         {
-          label: "data/",
-          text: "Instance root: .db pages, WAL, catalog, tmp spill.",
+          label: "On disk vs RAM",
+          text: ".db + .log on disk. Catalog_ is in-process metadata.",
         },
         {
           label: "RAM later",
@@ -55,7 +55,7 @@ export const diskOrientedDbmsLesson: Lesson = {
       id: "folder",
       title: "Inside data/ on your system",
       caption:
-        "Same folder tree, zoomed for roles. Click bustub.db → pages; bustub.wal → recovery log; catalog/ → names & schemas. This is how it looks under /var/lib/bustub/data/.",
+        "Same tree, zoomed for roles. Click bustub.db → 8 KB pages; bustub.log → recovery log; catalog → in-memory names & first_page_id (not a directory on disk).",
       durationMs: 7000,
       visual: {
         component: "DiskOrientedScene",
@@ -67,8 +67,8 @@ export const diskOrientedDbmsLesson: Lesson = {
       },
       callouts: [
         { label: "bustub.db", text: "Page-addressable file — all 8 KB units." },
-        { label: "bustub.wal", text: "Write-ahead log for crash recovery." },
-        { label: "catalog/", text: "Names → schemas and root page ids." },
+        { label: "bustub.log", text: "Write-ahead log (DiskManager stem + .log)." },
+        { label: "catalog_", text: "In-memory names → schemas and first_page_id." },
       ],
     },
     {

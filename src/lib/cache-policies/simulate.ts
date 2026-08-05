@@ -366,7 +366,7 @@ function simulateTwoQ(trace: number[], capacity: number): PolicySnapshot[] {
       null,
       emptyFrames(capacity),
       { A1in_fifo: [], Am_lru_mru_end: [] },
-      `2Q: first touch → A1in (FIFO, max ~${kin}). Re-hit → promote to Am (LRU).`,
+      `Simplified 2Q: first touch → A1in (FIFO, max ~${kin}). Resident re-hit → Am. (Paper 2Q also has A1out ghosts.)`,
       0,
       0,
     ),
@@ -401,9 +401,9 @@ function simulateTwoQ(trace: number[], capacity: number): PolicySnapshot[] {
           victim = am.shift()!; // LRU of Am
         }
       }
-      // Prefer A1in for first insert if room under kin, else Am
-      if (a1in.length < kin) a1in.push(p);
-      else am.push(p);
+      // Simplified 2Q: first touches always enter A1in (never skip to Am).
+      // Evict only when the pool is full — do not drop pages while frames are free.
+      a1in.push(p);
     }
 
     const residents = [...a1in, ...am];

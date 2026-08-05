@@ -132,13 +132,13 @@ export const pagesVsFramesLesson: Lesson = {
           frames: [
             { frameId: 0, pageId: 2, pinned: true, dirty: true, highlight: true },
             { frameId: 1, pageId: 5 },
-            { frameId: 2, pageId: 7 },
+            { frameId: 2, pageId: 3 },
             { frameId: 3, pageId: null },
           ],
           pageTable: [
             { pageId: 2, frameId: 0 },
             { pageId: 5, frameId: 1 },
-            { pageId: 7, frameId: 2 },
+            { pageId: 3, frameId: 2 },
           ],
           annotation: "Dirty frame 0 must flush before reuse",
         },
@@ -158,13 +158,13 @@ export const pagesVsFramesLesson: Lesson = {
           frames: [
             { frameId: 0, pageId: 2, dirty: true },
             { frameId: 1, pageId: 4, highlight: true },
-            { frameId: 2, pageId: 7 },
+            { frameId: 2, pageId: 3 },
             { frameId: 3, pageId: 1 },
           ],
           pageTable: [
             { pageId: 2, frameId: 0 },
             { pageId: 4, frameId: 1 },
-            { pageId: 7, frameId: 2 },
+            { pageId: 3, frameId: 2 },
             { pageId: 1, frameId: 3 },
           ],
           annotation: "Same frame, new page — page table updated",
@@ -191,13 +191,13 @@ export const pagesVsFramesLesson: Lesson = {
           frames: [
             { frameId: 0, pageId: 2, dirty: true },
             { frameId: 1, pageId: 4, pinned: true, highlight: true },
-            { frameId: 2, pageId: 7 },
+            { frameId: 2, pageId: 3 },
             { frameId: 3, pageId: 1 },
           ],
           pageTable: [
             { pageId: 2, frameId: 0 },
             { pageId: 4, frameId: 1 },
-            { pageId: 7, frameId: 2 },
+            { pageId: 3, frameId: 2 },
             { pageId: 1, frameId: 3 },
           ],
           annotation: "Next: LRU — which unpinned frame to evict?",
