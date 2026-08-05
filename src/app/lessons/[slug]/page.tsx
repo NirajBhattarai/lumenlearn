@@ -10,6 +10,8 @@ export function generateStaticParams() {
   return getAllLessons().map((l) => ({ slug: l.slug }));
 }
 
+export const dynamicParams = false;
+
 export default async function LessonPage({ params }: Props) {
   const { slug } = await params;
   const lesson = getLesson(slug);

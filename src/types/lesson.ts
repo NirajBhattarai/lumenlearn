@@ -14,6 +14,16 @@ export type BufferPoolVisualProps = {
   annotation?: string;
 };
 
+/** Animated cache replacement policy demo (lesson 3). */
+export type CachePolicyVisualProps = {
+  policy: "lru" | "mru" | "lru-k" | "clock" | "two-q" | "arc";
+  /** Frame capacity (default 4) */
+  capacity?: number;
+  /** Page-id access stream */
+  trace?: number[];
+  annotation?: string;
+};
+
 /** Disk-oriented DBMS React Flow scene props. */
 export type DiskOrientedVisualProps = {
   focus:
@@ -57,7 +67,8 @@ export type StructuresVisualProps = {
 export type VisualSpec =
   | { component: "BufferPoolScene"; props: BufferPoolVisualProps }
   | { component: "DiskOrientedScene"; props: DiskOrientedVisualProps }
-  | { component: "StructuresScene"; props: StructuresVisualProps };
+  | { component: "StructuresScene"; props: StructuresVisualProps }
+  | { component: "CachePolicyScene"; props: CachePolicyVisualProps };
 
 export type LessonStep = {
   id: string;

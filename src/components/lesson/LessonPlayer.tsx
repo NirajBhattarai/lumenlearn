@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import type { Lesson } from "@/types/lesson";
 import { BufferPoolScene } from "@/components/diagrams/BufferPoolScene";
+import { CachePolicyScene } from "@/components/diagrams/CachePolicyScene";
 import { DiskOrientedScene } from "@/components/diagrams/DiskOrientedScene";
 import { StructuresScene } from "@/components/diagrams/StructuresScene";
 import { Button } from "@/components/ui/Button";
@@ -70,6 +71,11 @@ export function LessonPlayer({ lesson }: Props) {
 
   useEffect(() => {
     if (!playing) return;
+    // Cache scene owns its own play/step over the access trace.
+    if (step.visual.component === "CachePolicyScene") {
+      setPlaying(false);
+      return;
+    }
     if (prefersReducedMotion()) {
       setPlaying(false);
       return;
@@ -137,6 +143,9 @@ export function LessonPlayer({ lesson }: Props) {
     }
     if (step.visual.component === "StructuresScene") {
       return <StructuresScene {...step.visual.props} />;
+    }
+    if (step.visual.component === "CachePolicyScene") {
+      return <CachePolicyScene {...step.visual.props} />;
     }
     return null;
   }, [step.visual]);

@@ -1,11 +1,17 @@
 import type { Lesson } from "@/types/lesson";
 import { arrayVsLinkedListLesson } from "./array-vs-linked-list";
+import { cacheReplacementLesson } from "./cache-replacement";
 import { diskOrientedDbmsLesson } from "./disk-oriented-dbms";
 import { pagesVsFramesLesson } from "./pages-vs-frames";
 
 export const allLessons: Lesson[] = [
   diskOrientedDbmsLesson,
   { ...pagesVsFramesLesson, order: 2, prerequisites: ["disk-oriented-dbms"] },
+  {
+    ...cacheReplacementLesson,
+    order: 3,
+    prerequisites: ["disk-oriented-dbms", "pages-vs-frames"],
+  },
   arrayVsLinkedListLesson,
 ];
 

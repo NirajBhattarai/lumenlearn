@@ -11,6 +11,8 @@ export function generateStaticParams() {
   return subjects.map((s) => ({ slug: s.slug }));
 }
 
+export const dynamicParams = false;
+
 export default async function SubjectPage({ params }: Props) {
   const { slug } = await params;
   const subject = subjects.find((s) => s.slug === slug);

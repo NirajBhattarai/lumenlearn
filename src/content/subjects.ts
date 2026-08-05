@@ -6,7 +6,11 @@ export const subjects: Subject[] = [
     title: "Database Systems",
     description:
       "Disk-oriented architecture, buffer pools, ARC, pages, indexes, and concurrency — as animated state machines.",
-    lessonSlugs: ["disk-oriented-dbms", "pages-vs-frames"],
+    lessonSlugs: [
+      "disk-oriented-dbms",
+      "pages-vs-frames",
+      "cache-replacement",
+    ],
   },
   {
     slug: "data-structures",

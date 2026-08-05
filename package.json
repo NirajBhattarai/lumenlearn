@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --test src/lib/visualization/*.test.ts src/lib/animation/*.test.ts",
+    "test": "node --experimental-strip-types --test src/lib/visualization/*.test.ts src/lib/animation/*.test.ts src/lib/cache-policies/*.test.ts",
     "skills:sync": "./scripts/sync-skills.sh",
     "skills:validate": "python3 scripts/validate-skills.py"
   },

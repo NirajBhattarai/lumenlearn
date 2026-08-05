@@ -8,20 +8,20 @@ export const pagesVsFramesLesson: Lesson = {
   level: "intro",
   order: 2,
   summary:
-    "See how a disk-oriented DBMS maps logical 8 KB pages into fixed RAM frames using a page table, pins, and dirty flags.",
+    "Map students pages (P1–P4 from the disk lesson) into fixed RAM frames with a page table, pins, and dirty flags — foundation for replacement policies.",
   prerequisites: ["disk-oriented-dbms"],
   steps: [
     {
       id: "hook",
       title: "The problem",
       caption:
-        "Your database is 2 GB, but the machine only has 1 GB of RAM. The DBMS still has to make every page feel reachable.",
+        "Table students already spans multiple 8 KB pages (P1, P2, …) on disk, but RAM only has 4 frames. We cache hot pages, not the whole file.",
       durationMs: 5500,
       visual: {
         component: "BufferPoolScene",
         props: {
           focus: "disk",
-          diskPages: [0, 1, 2, 3, 4, 5, 6, 7],
+          diskPages: [0, 1, 2, 3, 4, 5],
           frames: [
             { frameId: 0, pageId: null },
             { frameId: 1, pageId: null },
@@ -29,7 +29,7 @@ export const pagesVsFramesLesson: Lesson = {
             { frameId: 3, pageId: null },
           ],
           pageTable: [],
-          annotation: "Disk holds all pages · RAM has only 4 frames",
+          annotation: "P1 Ada/Bob · P2 Dan/Eve · P4 index · 4 frames only",
         },
       },
       callouts: [
@@ -49,7 +49,7 @@ export const pagesVsFramesLesson: Lesson = {
         component: "BufferPoolScene",
         props: {
           focus: "all",
-          diskPages: [0, 1, 2, 3, 4, 5, 6, 7],
+          diskPages: [0, 1, 2, 3, 4, 5],
           frames: [
             { frameId: 0, pageId: null, highlight: true },
             { frameId: 1, pageId: null },
@@ -75,7 +75,7 @@ export const pagesVsFramesLesson: Lesson = {
         component: "BufferPoolScene",
         props: {
           focus: "all",
-          diskPages: [0, 1, 2, 3, 4, 5, 6, 7],
+          diskPages: [0, 1, 2, 3, 4, 5],
           frames: [
             { frameId: 0, pageId: 2, highlight: true },
             { frameId: 1, pageId: null },
@@ -97,7 +97,7 @@ export const pagesVsFramesLesson: Lesson = {
         component: "BufferPoolScene",
         props: {
           focus: "frames",
-          diskPages: [0, 1, 2, 3, 4, 5, 6, 7],
+          diskPages: [0, 1, 2, 3, 4, 5],
           frames: [
             { frameId: 0, pageId: 2, pinned: true, highlight: true },
             { frameId: 1, pageId: 5 },
@@ -128,7 +128,7 @@ export const pagesVsFramesLesson: Lesson = {
         component: "BufferPoolScene",
         props: {
           focus: "frames",
-          diskPages: [0, 1, 2, 3, 4, 5, 6, 7],
+          diskPages: [0, 1, 2, 3, 4, 5],
           frames: [
             { frameId: 0, pageId: 2, pinned: true, dirty: true, highlight: true },
             { frameId: 1, pageId: 5 },
@@ -154,7 +154,7 @@ export const pagesVsFramesLesson: Lesson = {
         component: "BufferPoolScene",
         props: {
           focus: "all",
-          diskPages: [0, 1, 2, 3, 4, 5, 6, 7],
+          diskPages: [0, 1, 2, 3, 4, 5],
           frames: [
             { frameId: 0, pageId: 2, dirty: true },
             { frameId: 1, pageId: 4, highlight: true },
@@ -187,7 +187,7 @@ export const pagesVsFramesLesson: Lesson = {
         component: "BufferPoolScene",
         props: {
           focus: "all",
-          diskPages: [0, 1, 2, 3, 4, 5, 6, 7],
+          diskPages: [0, 1, 2, 3, 4, 5],
           frames: [
             { frameId: 0, pageId: 2, dirty: true },
             { frameId: 1, pageId: 4, pinned: true, highlight: true },
@@ -200,9 +200,15 @@ export const pagesVsFramesLesson: Lesson = {
             { pageId: 7, frameId: 2 },
             { pageId: 1, frameId: 3 },
           ],
-          annotation: "You now have the mental model for BusTub P1",
+          annotation: "Next: which frame to evict? → Cache Replacement lesson",
         },
       },
+      callouts: [
+        {
+          label: "Next lesson",
+          text: "LRU, MRU, LRU-K, Clock, 2Q, and ARC animated on the same students page stream.",
+        },
+      ],
     },
   ],
 };

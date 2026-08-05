@@ -13,6 +13,17 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## GitHub Pages
+
+This repo deploys a **static export** (not Jekyll). Push to `main` runs `.github/workflows/deploy-github-pages.yml`.
+
+Public URL: `https://nirajbhattarai.github.io/lumenlearn/`
+
+```bash
+npm test
+GITHUB_PAGES=true npm run build   # writes out/ with basePath /lumenlearn
+```
+
 ## Stack
 
 Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · Motion · Zustand · Lucide
