@@ -1,0 +1,14 @@
+---
+description: Data-driven technical visualization
+globs:
+  - src/components/diagrams/**/*
+  - src/lib/**/*
+alwaysApply: false
+---
+
+# Visualization
+
+- Prefer reusable state/events over one-off SVGs as engines grow.
+- Model: state → nodes/edges → events → timeline → render.
+- Limited palette; labeled nodes/edges; inspectable state.
+- See `docs/visualization-system.md` and skill `technical-visualization`.

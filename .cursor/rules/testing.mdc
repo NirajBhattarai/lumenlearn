@@ -1,0 +1,14 @@
+---
+description: Testing expectations before marking work done
+globs:
+  - src/**/*
+  - test/**/*
+  - **/*.{test,spec}.{ts,tsx}
+alwaysApply: false
+---
+
+# Testing
+
+- TypeScript/build success is not sufficient.
+- Add unit tests for new reducers/engines; E2E for player flows when Playwright exists.
+- Skill: `testing`.

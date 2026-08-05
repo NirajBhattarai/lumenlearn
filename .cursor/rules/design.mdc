@@ -1,0 +1,14 @@
+---
+description: Visual design and UI quality bar
+globs:
+  - src/**/*.{tsx,css}
+alwaysApply: false
+---
+
+# Design
+
+- Premium calm technical UI; strong hierarchy and typography.
+- Prohibit: AI dashboards, gradient/glass/glow spam, random cards, decorative motion.
+- Follow `docs/design-system.md`.
+- After UI changes, run skill `design-taste` (inspect → critique → iterate).
+- Visually inspect the running app before declaring done.

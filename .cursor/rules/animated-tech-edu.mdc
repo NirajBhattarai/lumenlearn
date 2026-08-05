@@ -1,0 +1,13 @@
+---
+description: Pointer to LumenLearn educational skill chain
+alwaysApply: false
+globs:
+  - src/content/**/*
+  - src/components/lesson/**/*
+  - src/components/diagrams/**/*
+---
+
+# Animated technical education
+
+Use skill orchestrator `animated-tech-edu` and the lesson chain in `docs/skills.md`.
+Do not reintroduce a monolithic rule — keep guidance in portable skills.

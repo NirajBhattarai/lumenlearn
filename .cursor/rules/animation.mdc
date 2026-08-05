@@ -1,0 +1,15 @@
+---
+description: Purposeful educational animation rules
+globs:
+  - src/components/**/*.{ts,tsx}
+  - src/lib/motion.ts
+alwaysApply: false
+---
+
+# Animation
+
+- Cause → transition → result; no decorative loops.
+- Prefer `transform` / `opacity`; honor `prefers-reduced-motion`.
+- Complex viz need play/pause/step/scrub (and speed when applicable).
+- Captions must teach if motion is off.
+- See `docs/animation-system.md` and skills `animation-engineering`, `educational-animation`.

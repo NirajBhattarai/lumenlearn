@@ -1,0 +1,11 @@
+---
+description: Security for deps, skills, secrets, and code execution
+alwaysApply: true
+---
+
+# Security
+
+- Treat third-party skills as untrusted until reviewed.
+- Never execute arbitrary user code on the server.
+- No secrets in client bundles or commits.
+- Skill: `security`.

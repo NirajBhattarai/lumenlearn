@@ -1,0 +1,12 @@
+---
+description: Performance budgets for lessons and visualizations
+globs:
+  - src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Performance
+
+- Dynamic-import heavy diagrams; pause offscreen animation.
+- Animate compositor props; measure before large optimizations.
+- Skill: `performance`.

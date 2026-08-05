@@ -1,26 +1,180 @@
 @import "tailwindcss";
+/* @xyflow kept optional for future graph lessons — styles only if used */
+@import "@xyflow/react/dist/style.css";
+
+/* ─── Design tokens: precision instrument ─── */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  --background: #0a0b0d;
+  --foreground: #e8eaed;
+  --muted: #8b929a;
+  --subtle: #5c636b;
+
+  --surface: #111316;
+  --surface-raised: #171a1e;
+  --stage: #0e1013;
+
+  --border: #252a31;
+  --border-strong: #353b44;
+
+  --accent: #4c8bf5;
+  --accent-hover: #6a9ff7;
+  --accent-muted: color-mix(in srgb, var(--accent) 16%, transparent);
+  --accent-fg: #0a0b0d;
+
+  --ok: #3d9a6a;
+  --warn: #c4922a;
+  --danger: #d45b5b;
+
+  --focus-ring: color-mix(in srgb, var(--accent) 55%, transparent);
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-stage: 12px;
+
+  --space-page: 1.5rem;
+  --max-width: 72rem;
+
+  --shadow-stage: 0 1px 0 color-mix(in srgb, #fff 4%, transparent);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --background: #f4f5f6;
+  --foreground: #121417;
+  --muted: #5c636b;
+  --subtle: #8b929a;
+
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --stage: #eceef0;
+
+  --border: #d8dce1;
+  --border-strong: #b8bfc7;
+
+  --accent: #2f6fed;
+  --accent-hover: #1f5cd6;
+  --accent-muted: color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-fg: #ffffff;
+
+  --shadow-stage: 0 1px 2px rgb(0 0 0 / 6%);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-stage: var(--stage);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-muted: var(--accent-muted);
+  --color-accent-fg: var(--accent-fg);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-stage: var(--radius-stage);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01" on, "kern" on;
+  text-rendering: optimizeLegibility;
+}
+
+/* Focus: visible, restrained */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--foreground);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* React Flow — match design tokens + smooth step morphs */
+.disk-flow .react-flow__controls-button {
+  background: var(--surface);
+  border-bottom-color: var(--border);
+  fill: var(--foreground);
+}
+
+.disk-flow .react-flow__controls-button:hover {
+  background: var(--surface-raised);
+}
+
+.disk-flow .react-flow__edge-textbg {
+  fill: var(--surface);
+}
+
+.disk-flow .react-flow__edge-text {
+  fill: var(--muted);
+  font-size: 10px;
+}
+
+.disk-flow .react-flow__attribution {
+  display: none;
+}
+
+/* Smooth node position/opacity when the lesson graph updates between steps */
+.disk-flow--smooth .react-flow__node {
+  transition:
+    transform 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.36s ease;
+}
+
+.disk-flow--smooth .react-flow__edge path {
+  transition:
+    stroke 0.35s ease,
+    stroke-opacity 0.35s ease,
+    opacity 0.35s ease;
+}
+
+.disk-flow--smooth .react-flow__edge-text,
+.disk-flow--smooth .react-flow__edge-textbg {
+  transition: opacity 0.3s ease;
+}
+
+.disk-flow--smooth .react-flow__viewport {
+  transition: none; /* fitView drives viewport; avoid fighting it */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disk-flow--smooth .react-flow__node,
+  .disk-flow--smooth .react-flow__edge path,
+  .disk-flow--smooth .react-flow__edge-text,
+  .disk-flow--smooth .react-flow__edge-textbg {
+    transition: none !important;
+  }
 }

@@ -1,0 +1,14 @@
+---
+description: LumenLearn architecture invariants and content/renderer separation
+alwaysApply: true
+---
+
+# Architecture
+
+- Product: interactive technical knowledge engine (not a docs site).
+- Content is data under `src/content/`; diagrams are pure `f(props)` under `src/components/diagrams/`.
+- Do not hardcode multi-step narratives only in page components.
+- Prefer extending existing player/types over new frameworks.
+- Architectural changes need an ADR in `docs/decisions/`.
+- Read `AGENTS.md` and `docs/architecture.md`.
+- Skills live in `skills/`; load only relevant ones (`docs/skills.md`).

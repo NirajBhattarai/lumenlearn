@@ -1,0 +1,14 @@
+---
+description: React/Next.js/TypeScript conventions for LumenLearn
+globs:
+  - src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Frontend
+
+- App Router; Server Components by default; `"use client"` only for interactivity.
+- Match existing patterns in `LessonPlayer` and diagrams.
+- Strict TypeScript; extend `src/types/lesson.ts` carefully.
+- Use `cn` from `@/lib/cn`; Motion from `motion/react`.
+- Verify current Next/React docs when APIs may have changed (`technical-research`).

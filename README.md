@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LumenLearn
 
-## Getting Started
+Interactive **technical knowledge engine** — learn systems, algorithms, databases, and more by seeing, interacting, experimenting, and coding.
 
-First, run the development server:
+Not a documentation website.
+
+## Quick start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · Motion · Zustand · Lucide
 
-## Learn More
+## Agent system
 
-To learn more about Next.js, take a look at the following resources:
+Universal instructions for Claude Code, Cursor, Codex, Gemini, and compatible agents:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Entry | Path |
+|-------|------|
+| Universal | [`AGENTS.md`](./AGENTS.md) |
+| Claude | [`CLAUDE.md`](./CLAUDE.md) |
+| Cursor rules | [`.cursor/rules/`](./.cursor/rules/) |
+| Portable skills | [`skills/`](./skills/) |
+| Skill registry | [`docs/skills.md`](./docs/skills.md) |
+| Architecture | [`docs/architecture.md`](./docs/architecture.md) |
+| Research | [`docs/research/`](./docs/research/) |
+| ADRs | [`docs/decisions/`](./docs/decisions/) |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+./scripts/sync-skills.sh      # link skills into .claude + .agents
+python3 scripts/validate-skills.py
+```
 
-## Deploy on Vercel
+## Add a lesson
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Follow skill `lesson-authoring`: typed content → register → diagram → player wire-up → transport + reduced-motion check.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Philosophy
+
+10 exceptional interactive lessons beat 100 mediocre doc pages.
