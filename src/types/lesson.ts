@@ -22,6 +22,8 @@ export type CachePolicyVisualProps = {
   /** Page-id access stream */
   trace?: number[];
   annotation?: string;
+  /** In-scene teaching card (replaces lesson caption chrome). */
+  teach?: { title: string; body: string };
 };
 
 /** Disk-oriented DBMS React Flow scene props. */

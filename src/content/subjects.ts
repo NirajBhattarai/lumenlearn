@@ -9,7 +9,12 @@ export const subjects: Subject[] = [
     lessonSlugs: [
       "disk-oriented-dbms",
       "pages-vs-frames",
-      "cache-replacement",
+      "cache-lru",
+      "cache-mru",
+      "cache-lru-k",
+      "cache-clock",
+      "cache-2q",
+      "cache-arc",
     ],
   },
   {

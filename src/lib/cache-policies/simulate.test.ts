@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { simulatePolicy } from "./simulate.ts";
-import { STUDENTS_ACCESS_TRACE } from "./sample.ts";
+import {
+  ACCESS_INTENTS,
+  CACHE_STUDENTS,
+  INDEX_LEAF,
+  STUDENTS_ACCESS_TRACE,
+  formatRid,
+} from "./sample.ts";
 
 describe("simulatePolicy LRU", () => {
   it("evicts the least-recent page when full", () => {
@@ -76,6 +82,13 @@ describe("simulatePolicy ARC", () => {
 });
 
 describe("students workload", () => {
+  it("keeps SQL intents aligned with the page trace", () => {
+    assert.equal(ACCESS_INTENTS.length, STUDENTS_ACCESS_TRACE.length);
+    ACCESS_INTENTS.forEach((intent, i) => {
+      assert.equal(intent.pageId, STUDENTS_ACCESS_TRACE[i]);
+    });
+  });
+
   it("runs every policy to completion on the shared trace", () => {
     for (const policy of ["lru", "mru", "lru-k", "clock", "two-q", "arc"] as const) {
       const run = simulatePolicy(policy, STUDENTS_ACCESS_TRACE, 4);
@@ -84,5 +97,15 @@ describe("students workload", () => {
       assert.equal(last.hits + last.misses, STUDENTS_ACCESS_TRACE.length);
       assert.ok(last.frames.filter((f) => f.pageId != null).length <= 4);
     }
+  });
+
+  it("decodes index keys as student id → RID (page, slot)", () => {
+    assert.equal(INDEX_LEAF.length, CACHE_STUDENTS.length);
+    const ada = INDEX_LEAF.find((e) => e.key === 1);
+    assert.deepEqual(ada, { key: 1, pageId: 1, slot: 0, name: "Ada" });
+    assert.equal(formatRid(1, 0), "(P1, slot 0)");
+    const ivan = CACHE_STUDENTS.find((r) => r.id === 8);
+    assert.equal(ivan?.pageId, 3);
+    assert.equal(ivan?.slot, 0);
   });
 });

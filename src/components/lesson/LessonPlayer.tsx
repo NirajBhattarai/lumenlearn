@@ -40,6 +40,7 @@ export function LessonPlayer({ lesson }: Props) {
   const [navDir, setNavDir] = useState<1 | -1>(1);
   const immersive = lesson.presentation === "immersive";
   const step = lesson.steps[stepIndex];
+  const stageOwnsChrome = step.visual.component === "CachePolicyScene";
   const total = lesson.steps.length;
   const progress = ((stepIndex + 1) / total) * 100;
   const reduceMotion = prefersReducedMotion();
@@ -87,6 +88,7 @@ export function LessonPlayer({ lesson }: Props) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (stageOwnsChrome) return;
       if (e.key === " " || e.code === "Space") {
         e.preventDefault();
         setPlaying((p) => !p);
@@ -122,7 +124,7 @@ export function LessonPlayer({ lesson }: Props) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [next, prev, goTo, total]);
+  }, [next, prev, goTo, total, stageOwnsChrome]);
 
   useEffect(() => {
     if (!immersive) return;
@@ -277,7 +279,7 @@ export function LessonPlayer({ lesson }: Props) {
           </AnimatePresence>
         </div>
 
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-3 bg-gradient-to-b from-background/90 to-transparent px-3 py-3 sm:px-4">
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-3 px-3 py-3 sm:px-4">
           <Link
             href={`/subjects/${lesson.subjectSlug}`}
             className="pointer-events-auto inline-flex items-center gap-1.5 rounded-[var(--radius-md)] border border-border bg-surface/90 px-2.5 py-1.5 text-xs text-muted backdrop-blur-sm transition-colors hover:text-foreground"
@@ -286,77 +288,82 @@ export function LessonPlayer({ lesson }: Props) {
             {lesson.subject}
           </Link>
           <p className="pointer-events-none font-mono text-[11px] text-subtle">
-            {String(stepIndex + 1).padStart(2, "0")} /{" "}
-            {String(total).padStart(2, "0")}
+            {stageOwnsChrome
+              ? lesson.title
+              : `${String(stepIndex + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`}
           </p>
         </div>
 
-        <div
-          className="h-0.5 shrink-0 bg-border"
-          role="progressbar"
-          aria-valuenow={stepIndex + 1}
-          aria-valuemin={1}
-          aria-valuemax={total}
-          aria-label="Lesson progress"
-        >
-          <motion.div
-            className="h-full bg-accent"
-            animate={{ width: `${progress}%` }}
-            transition={
-              reduceMotion
-                ? { duration: 0.01 }
-                : { duration: 0.45 / speed, ease: [0.16, 1, 0.3, 1] }
-            }
-          />
-        </div>
-
-        <div className="relative shrink-0 overflow-hidden border-t border-border bg-surface/95 px-3 py-2 backdrop-blur-sm sm:px-4">
-          <AnimatePresence mode="wait" initial={false} custom={navDir}>
-            <motion.div
-              key={step.id}
-              custom={navDir}
-              initial={
-                reduceMotion
-                  ? { opacity: 1 }
-                  : { opacity: 0, y: captionOffset }
-              }
-              animate={{ opacity: 1, y: 0 }}
-              exit={
-                reduceMotion
-                  ? { opacity: 0 }
-                  : { opacity: 0, y: -captionOffset * 0.6 }
-              }
-              transition={captionTransition}
+        {stageOwnsChrome ? null : (
+          <>
+            <div
+              className="h-0.5 shrink-0 bg-border"
+              role="progressbar"
+              aria-valuenow={stepIndex + 1}
+              aria-valuemin={1}
+              aria-valuemax={total}
+              aria-label="Lesson progress"
             >
-              <p className="text-eyebrow">{step.title}</p>
-              <p className="mt-0.5 text-[12px] leading-snug text-muted sm:text-[13px]">
-                {step.caption}
-              </p>
-              {step.callouts && step.callouts.length > 0 ? (
-                <div className="mt-2 hidden gap-2 overflow-x-auto pb-0.5 md:flex">
-                  {step.callouts.map((c) => (
-                    <div
-                      key={c.label}
-                      className="min-w-[10rem] max-w-[16rem] shrink-0 rounded-[var(--radius-md)] border border-border bg-stage px-2 py-1.5"
-                    >
-                      <p className="font-mono text-[9px] uppercase tracking-wider text-subtle">
-                        {c.label}
-                      </p>
-                      <p className="mt-0.5 text-[11px] leading-snug text-muted">
-                        {c.text}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+              <motion.div
+                className="h-full bg-accent"
+                animate={{ width: `${progress}%` }}
+                transition={
+                  reduceMotion
+                    ? { duration: 0.01 }
+                    : { duration: 0.45 / speed, ease: [0.16, 1, 0.3, 1] }
+                }
+              />
+            </div>
 
-        <div className="pointer-events-auto flex shrink-0 flex-col gap-2 border-t border-border bg-surface/95 px-3 py-2.5 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between sm:px-4">
-          {transport}
-          {stepDots}
-        </div>
+            <div className="relative shrink-0 overflow-hidden border-t border-border bg-surface/95 px-3 py-2 backdrop-blur-sm sm:px-4">
+              <AnimatePresence mode="wait" initial={false} custom={navDir}>
+                <motion.div
+                  key={step.id}
+                  custom={navDir}
+                  initial={
+                    reduceMotion
+                      ? { opacity: 1 }
+                      : { opacity: 0, y: captionOffset }
+                  }
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={
+                    reduceMotion
+                      ? { opacity: 0 }
+                      : { opacity: 0, y: -captionOffset * 0.6 }
+                  }
+                  transition={captionTransition}
+                >
+                  <p className="text-eyebrow">{step.title}</p>
+                  <p className="mt-0.5 text-[12px] leading-snug text-muted sm:text-[13px]">
+                    {step.caption}
+                  </p>
+                  {step.callouts && step.callouts.length > 0 ? (
+                    <div className="mt-2 hidden gap-2 overflow-x-auto pb-0.5 md:flex">
+                      {step.callouts.map((c) => (
+                        <div
+                          key={c.label}
+                          className="min-w-[10rem] max-w-[16rem] shrink-0 rounded-[var(--radius-md)] border border-border bg-stage px-2 py-1.5"
+                        >
+                          <p className="font-mono text-[9px] uppercase tracking-wider text-subtle">
+                            {c.label}
+                          </p>
+                          <p className="mt-0.5 text-[11px] leading-snug text-muted">
+                            {c.text}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <div className="pointer-events-auto flex shrink-0 flex-col gap-2 border-t border-border bg-surface/95 px-3 py-2.5 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between sm:px-4">
+              {transport}
+              {stepDots}
+            </div>
+          </>
+        )}
       </div>
     );
   }

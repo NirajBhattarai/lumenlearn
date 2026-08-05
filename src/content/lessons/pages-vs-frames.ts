@@ -200,13 +200,13 @@ export const pagesVsFramesLesson: Lesson = {
             { pageId: 7, frameId: 2 },
             { pageId: 1, frameId: 3 },
           ],
-          annotation: "Next: which frame to evict? → Cache Replacement lesson",
+          annotation: "Next: LRU — which unpinned frame to evict?",
         },
       },
       callouts: [
         {
           label: "Next lesson",
-          text: "LRU, MRU, LRU-K, Clock, 2Q, and ARC animated on the same students page stream.",
+          text: "Start with LRU on the students table, then MRU, LRU-K, Clock, 2Q, and ARC — each its own lesson.",
         },
       ],
     },
