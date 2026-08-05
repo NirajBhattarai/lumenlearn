@@ -3,10 +3,12 @@ import { arrayVsLinkedListLesson } from "./array-vs-linked-list";
 import { cachePolicyLessons } from "./cache-policies";
 import { diskOrientedDbmsLesson } from "./disk-oriented-dbms";
 import { pagesVsFramesLesson } from "./pages-vs-frames";
+import { tableCatalogStorageLesson } from "./table-catalog-storage";
 
 export const allLessons: Lesson[] = [
   diskOrientedDbmsLesson,
   { ...pagesVsFramesLesson, order: 2, prerequisites: ["disk-oriented-dbms"] },
+  tableCatalogStorageLesson,
   ...cachePolicyLessons,
   arrayVsLinkedListLesson,
 ];

@@ -15,6 +15,7 @@ import { BufferPoolScene } from "@/components/diagrams/BufferPoolScene";
 import { CachePolicyScene } from "@/components/diagrams/CachePolicyScene";
 import { DiskOrientedScene } from "@/components/diagrams/DiskOrientedScene";
 import { StructuresScene } from "@/components/diagrams/StructuresScene";
+import { TableCatalogScene } from "@/components/diagrams/TableCatalogScene";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
 import { Panel } from "@/components/ui/Panel";
@@ -40,7 +41,9 @@ export function LessonPlayer({ lesson }: Props) {
   const [navDir, setNavDir] = useState<1 | -1>(1);
   const immersive = lesson.presentation === "immersive";
   const step = lesson.steps[stepIndex];
-  const stageOwnsChrome = step.visual.component === "CachePolicyScene";
+  const stageOwnsChrome =
+    step.visual.component === "CachePolicyScene" ||
+    step.visual.component === "TableCatalogScene";
   const total = lesson.steps.length;
   const progress = ((stepIndex + 1) / total) * 100;
   const reduceMotion = prefersReducedMotion();
@@ -72,8 +75,11 @@ export function LessonPlayer({ lesson }: Props) {
 
   useEffect(() => {
     if (!playing) return;
-    // Cache scene owns its own play/step over the access trace.
-    if (step.visual.component === "CachePolicyScene") {
+    // These scenes own their own play / step controls.
+    if (
+      step.visual.component === "CachePolicyScene" ||
+      step.visual.component === "TableCatalogScene"
+    ) {
       setPlaying(false);
       return;
     }
@@ -148,6 +154,9 @@ export function LessonPlayer({ lesson }: Props) {
     }
     if (step.visual.component === "CachePolicyScene") {
       return <CachePolicyScene {...step.visual.props} />;
+    }
+    if (step.visual.component === "TableCatalogScene") {
+      return <TableCatalogScene {...step.visual.props} />;
     }
     return null;
   }, [step.visual]);

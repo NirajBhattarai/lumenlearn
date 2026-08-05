@@ -52,6 +52,12 @@ export type DiskOrientedVisualProps = {
   activeLink?: string | null;
 };
 
+/** Interactive CREATE / INSERT lab: catalog → scheduler → datadb.db. */
+export type TableCatalogVisualProps = {
+  teach?: { title: string; body: string };
+  annotation?: string;
+};
+
 export type StructuresVisualProps = {
   mode:
     | "array"
@@ -70,7 +76,8 @@ export type VisualSpec =
   | { component: "BufferPoolScene"; props: BufferPoolVisualProps }
   | { component: "DiskOrientedScene"; props: DiskOrientedVisualProps }
   | { component: "StructuresScene"; props: StructuresVisualProps }
-  | { component: "CachePolicyScene"; props: CachePolicyVisualProps };
+  | { component: "CachePolicyScene"; props: CachePolicyVisualProps }
+  | { component: "TableCatalogScene"; props: TableCatalogVisualProps };
 
 export type LessonStep = {
   id: string;
