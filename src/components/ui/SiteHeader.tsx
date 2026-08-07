@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
-  { href: "/subjects/data-structures", label: "Subjects" },
+  { href: "/subjects", label: "Subjects" },
   { href: "/lessons/array-vs-linked-list", label: "Start" },
 ] as const;
 

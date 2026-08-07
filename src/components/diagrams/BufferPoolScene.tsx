@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import type { BufferPoolVisualProps } from "@/types/lesson";
+import { MarkImage } from "@/components/ui/MarkImage";
 import { durations, easings } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
@@ -20,19 +21,22 @@ export function BufferPoolScene({
 
   return (
     <div className="flex h-full min-h-[320px] w-full flex-col gap-4 p-2 sm:p-4">
-      {annotation ? (
-        <motion.p
-          key={annotation}
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: durations.ui, ease: easings.out }}
-          className="text-center text-sm font-medium text-cyan-200/90"
-        >
-          {annotation}
-        </motion.p>
-      ) : (
-        <div className="h-5" />
-      )}
+      <div className="flex items-start gap-2.5">
+        <MarkImage src="/marks/mark-pages.jpg" size={40} className="rounded-[var(--radius-md)]" />
+        {annotation ? (
+          <motion.p
+            key={annotation}
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: durations.ui, ease: easings.out }}
+            className="pt-1 text-sm font-medium text-cyan-200/90"
+          >
+            {annotation}
+          </motion.p>
+        ) : (
+          <div className="h-5" />
+        )}
+      </div>
 
       <div className="grid flex-1 grid-cols-1 gap-4 lg:grid-cols-[1.1fr_1.2fr_0.9fr]">
         {/* Disk */}

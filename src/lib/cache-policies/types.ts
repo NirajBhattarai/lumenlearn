@@ -37,6 +37,15 @@ export type PolicyRun = {
   snapshots: PolicySnapshot[];
 };
 
+export const POLICY_MARK: Record<CachePolicyId, string> = {
+  lru: "/marks/mark-lru.jpg",
+  mru: "/marks/mark-mru.jpg",
+  "lru-k": "/marks/mark-lruk.jpg",
+  clock: "/marks/mark-clock.jpg",
+  "two-q": "/marks/mark-2q.jpg",
+  arc: "/marks/mark-arc.jpg",
+};
+
 export const POLICY_META: Record<
   CachePolicyId,
   { name: string; short: string; rule: string; wikiUrl: string }

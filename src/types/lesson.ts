@@ -58,6 +58,12 @@ export type TableCatalogVisualProps = {
   annotation?: string;
 };
 
+/** PageGuard / RAII / two-latch lab. */
+export type PageGuardVisualProps = {
+  teach?: { title: string; body: string };
+  annotation?: string;
+};
+
 export type StructuresVisualProps = {
   mode:
     | "array"
@@ -77,7 +83,8 @@ export type VisualSpec =
   | { component: "DiskOrientedScene"; props: DiskOrientedVisualProps }
   | { component: "StructuresScene"; props: StructuresVisualProps }
   | { component: "CachePolicyScene"; props: CachePolicyVisualProps }
-  | { component: "TableCatalogScene"; props: TableCatalogVisualProps };
+  | { component: "TableCatalogScene"; props: TableCatalogVisualProps }
+  | { component: "PageGuardScene"; props: PageGuardVisualProps };
 
 export type LessonStep = {
   id: string;

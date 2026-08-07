@@ -16,6 +16,7 @@ import {
   useReactFlow,
 } from "@xyflow/react";
 import type { DiskOrientedVisualProps } from "@/types/lesson";
+import { MarkImage } from "@/components/ui/MarkImage";
 import { buildDiskFlowGraph } from "./disk-flow/buildGraph";
 import { diskNodeTypes } from "./disk-flow/nodes";
 import type { StudentRow } from "./disk-flow/sample";
@@ -139,22 +140,29 @@ function DiskFlowInner(props: Props) {
 
   return (
     <div className="absolute inset-0 h-full w-full bg-stage">
-      <AnimatePresence mode="wait" initial={false}>
-        {props.annotation ? (
-          <motion.div
-            key={props.annotation}
-            initial={reduce ? false : { opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? undefined : { opacity: 0, y: -4 }}
-            transition={{ duration: reduce ? 0.01 : 0.32, ease: FIT_EASE }}
-            className="pointer-events-none absolute left-3 top-3 z-10 max-w-[min(90vw,28rem)] rounded-[var(--radius-md)] border border-border bg-surface/90 px-2.5 py-1.5 backdrop-blur-sm sm:left-4 sm:top-4"
-          >
-            <p className="font-mono text-[10px] text-muted sm:text-[11px]">
-              {props.annotation}
-            </p>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      <div className="pointer-events-none absolute left-3 top-14 z-10 flex max-w-[min(90vw,28rem)] items-start gap-2 sm:left-4">
+        <MarkImage
+          src="/marks/mark-disk.jpg"
+          size={44}
+          className="rounded-[var(--radius-md)] shadow-[var(--shadow-stage)]"
+        />
+        <AnimatePresence mode="wait" initial={false}>
+          {props.annotation ? (
+            <motion.div
+              key={props.annotation}
+              initial={reduce ? false : { opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduce ? undefined : { opacity: 0, y: -4 }}
+              transition={{ duration: reduce ? 0.01 : 0.32, ease: FIT_EASE }}
+              className="rounded-[var(--radius-md)] border border-border bg-surface/90 px-2.5 py-1.5 backdrop-blur-sm"
+            >
+              <p className="font-mono text-[10px] text-muted sm:text-[11px]">
+                {props.annotation}
+              </p>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </div>
 
       <ReactFlow
         nodes={nodes}

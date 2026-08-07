@@ -7,13 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --test src/lib/visualization/*.test.ts src/lib/animation/*.test.ts src/lib/cache-policies/*.test.ts src/lib/table-catalog/*.test.ts",
+    "test": "node --experimental-strip-types --test src/lib/visualization/*.test.ts src/lib/animation/*.test.ts src/lib/cache-policies/*.test.ts src/lib/table-catalog/*.test.ts src/lib/page-guard/*.test.ts",
     "skills:sync": "./scripts/sync-skills.sh",
     "skills:validate": "python3 scripts/validate-skills.py"
   },
   "dependencies": {
+    "@theatre/core": "^0.7.2",
     "@xyflow/react": "^12.11.2",
     "clsx": "^2.1.1",
+    "gsap": "^3.15.0",
     "lucide-react": "^1.28.0",
     "motion": "^12.43.0",
     "next": "16.3.0",

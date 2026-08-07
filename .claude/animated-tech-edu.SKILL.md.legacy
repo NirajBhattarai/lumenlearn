@@ -1,0 +1,236 @@
+---
+name: animated-tech-edu
+description: >
+  Build high-quality animated websites that teach technical subjects (CS, systems,
+  math, blockchain, databases, etc.) with interactive diagrams, scrubbable timelines,
+  step-by-step scenes, and production-grade motion. Use when the user asks for an
+  educational explainer site, animated lessons, visual teaching platform, "like
+  Josh Comeau / 3Blue1Brown for the web", interactive technical tutorial, or runs
+  /animated-tech-edu. Works for Grok, Cursor, and Claude agent workflows.
+metadata:
+  short-description: "Animated technical education websites"
+  agents: "grok,cursor,claude"
+---
+
+# Animated Technical Education Website Skill
+
+You are building a **premium, motion-first learning product** — not a blog with GIFs.
+Every lesson should feel like a carefully directed explainer: clear narrative, visual
+state machines, interactive controls, and zero decorative noise.
+
+## When this skill applies
+
+- Animated / interactive technical education sites
+- Visual explainers for algorithms, systems, networking, databases, crypto, math
+- "Teach X with animations" or "visual book / visual course" products
+- Next.js + motion (Motion/Framer, GSAP, Rive, Canvas, WebGL) stacks
+
+## Non-negotiable product principles
+
+1. **Concept before chrome** — every animation teaches; no pure decoration.
+2. **One idea per scene** — 15–45s of attention budget per beat.
+3. **State is explicit** — lessons are finite state machines, not free-form DOM mess.
+4. **Learner control** — play/pause, step prev/next, scrub timeline, speed, restart.
+5. **Progressive disclosure** — start concrete, then generalize, then edge cases.
+6. **Accessible motion** — honor `prefers-reduced-motion`; never rely on color alone.
+7. **Performance** — animate `transform`/`opacity` primarily; keep INP/LCP healthy.
+8. **Source of truth** — content lives in structured MDX/JSON; UI is a renderer.
+
+## Research-backed motion stack (pick deliberately)
+
+| Need | Prefer | Avoid for core lessons |
+|------|--------|------------------------|
+| UI + scene choreography in React | **Motion** (`motion` / framer-motion) | Random CSS spam |
+| Complex timelines / scroll sequences | **GSAP + ScrollTrigger** | Nested setTimeout chains |
+| Interactive vector characters / state machines | **Rive** | Heavy Lottie loops for pedagogy |
+| Code-driven technical diagrams / math | **SVG + Motion**, **D3**, **Canvas** | Screenshot GIFs |
+| 3D spatial systems (rare) | **Three.js / R3F** only when 3D is the point | 3D for everything |
+| Exportable video explainers | **Remotion** (offline) or **Motion Canvas** | Video as only format |
+| Diagram-first sketching | Design in Excalidraw/tldraw → implement as React/SVG | Shipping sketches as the product |
+
+**Default web lesson stack (recommended):**
+Next.js (App Router) + TypeScript + Tailwind + Motion + MDX + Zustand + KaTeX + CodeMirror (optional).
+
+## Architecture (required shape)
+
+```
+app/
+  page.tsx                    # marketing / catalog
+  subjects/[slug]/page.tsx
+  lessons/[slug]/page.tsx     # lesson shell + player
+components/
+  lesson/
+    LessonPlayer.tsx          # transport: play, step, scrub
+    SceneStage.tsx            # active scene viewport
+    StepRail.tsx              # outline / progress
+    CaptionBar.tsx            # narrator text for current beat
+  diagrams/                   # pure visual components (props = state)
+  ui/                         # buttons, cards, callouts
+content/
+  subjects/*.ts               # catalog metadata
+  lessons/*.mdx or *.ts       # structured lesson scripts
+lib/
+  lesson-machine.ts           # step index, reduce, seek
+  motion.ts                   # shared easings, durations, reduced-motion
+  cn.ts
+types/
+  lesson.ts
+```
+
+### Lesson data model (canonical)
+
+```ts
+export type LessonStep = {
+  id: string;
+  title: string;
+  /** Narration / caption shown under the stage */
+  caption: string;
+  /** Optional longer explanation (markdown) */
+  body?: string;
+  /** Duration hint for autoplay (ms) */
+  durationMs?: number;
+  /** Diagram component key + props for this beat */
+  visual: {
+    component: string; // e.g. "BufferPoolScene"
+    props: Record<string, unknown>;
+  };
+  /** Optional callouts, highlights, code snippets */
+  callouts?: Array<{ label: string; text: string }>;
+  code?: { language: string; source: string; highlight?: number[] };
+};
+
+export type Lesson = {
+  slug: string;
+  title: string;
+  subject: string;
+  level: "intro" | "intermediate" | "advanced";
+  summary: string;
+  prerequisites?: string[];
+  steps: LessonStep[];
+};
+```
+
+Render lessons by **index into `steps`**. Never hardcode multi-scene logic inside page.tsx.
+
+## Pedagogy patterns (use these)
+
+### 1. Concrete → abstract
+Show a single worked example first (one page, one frame), then generalize.
+
+### 2. Compare & contrast
+Split stage: wrong policy vs right policy (e.g. LRU flood vs ARC).
+
+### 3. State machine lessons
+Name states. Animate transitions. Show invariant after each transition.
+
+### 4. Scrubbable timeline
+Learner drags playhead; diagram is a pure function of `t` or `stepIndex`.
+
+### 5. Interactive lab after watch
+After 3–6 directed steps, unlock a playground with constrained knobs.
+
+### 6. Check for understanding
+One multiple-choice or predict-the-next-state question before advancing chapters.
+
+## Motion craft rules (quality bar)
+
+From production educational sites (Comeau-style interactive essays, scroll explainers):
+
+- Prefer **action-driven** motion (enter snappy / exit softer) over symmetric fluff.
+- Default easings: enter `easeOut`, UI hover quick (120–180ms), scene morph 300–600ms.
+- Stagger related items 30–60ms — not more unless intentional.
+- Use **layoutId** / shared layout sparingly for continuity of the same object across steps.
+- Never animate layout thrash properties (`width`/`height`/`top`/`left`) when `transform` works.
+- Always implement:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+And in JS:
+
+```ts
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+```
+
+When reduced motion is on: jump to final visual state, keep captions/steps, disable autoplay.
+
+## Visual design system (high quality)
+
+- **Typography:** one display font (tight tracking for titles) + one readable body (Inter / Geist / Source Serif for long form).
+- **Color:** dark stage + light content OR soft paper light theme; accent for *active* teaching objects only.
+- **Grid:** stage ~16:10 or 16:9; captions below; step rail left or bottom on mobile.
+- **Depth:** subtle borders, soft shadows; no glassmorphism soup.
+- **Diagrams:** thick strokes, limited palette (3–5 colors), labeled arrows, consistent icon language.
+- **Empty / loading:** skeleton of the stage, not a blank page.
+
+## Content authoring workflow
+
+1. **Outline** the misconception → truth → intuition → formal model → pitfalls.
+2. Write **step captions** as if voice-over (≤ 2 sentences each).
+3. Define **visual props per step** before coding animation.
+4. Implement diagram as pure component `f(props)`.
+5. Wire `LessonPlayer` to step index.
+6. Add keyboard: `Space` play/pause, `←/→` step, `Home/End`.
+7. Mobile pass: stage stacks; controls large hit targets.
+
+## Implementation checklist (every lesson PR)
+
+- [ ] Lesson loads from structured content (not only JSX dump)
+- [ ] Play / pause / step / scrub works
+- [ ] Keyboard accessible
+- [ ] `prefers-reduced-motion` respected
+- [ ] No layout shift on step change (reserve stage height)
+- [ ] Captions make sense without animation
+- [ ] Code samples (if any) syntax-highlighted
+- [ ] Math (if any) via KaTeX
+- [ ] Lighthouse-friendly: lazy heavy diagrams, `dynamic(..., { ssr: false })` when needed
+- [ ] Subject appears in catalog with level + summary
+
+## Agent workflow (Grok / Cursor / Claude)
+
+When the user asks to build or extend the site:
+
+1. Read this skill + `references/stack.md` + `references/lesson-patterns.md`.
+2. Confirm subject + first lesson topic if missing (ask once, concisely).
+3. Scaffold or extend Next.js App Router project (do not reinvent if project exists).
+4. Add/extend types + lesson content first.
+5. Build or reuse diagram components.
+6. Wire player shell.
+7. Run `npm run build` (or project equivalent) and fix errors.
+8. Summarize what was taught and how to run `npm run dev`.
+
+### Cursor-specific
+- Prefer editing with project rules in `.cursor/rules/animated-tech-edu.mdc`.
+- Keep diffs focused; match existing component style.
+
+### Claude-specific
+- Follow `CLAUDE.md` project instructions; prefer small verifiable steps.
+
+### Grok-specific
+- Use this skill via `/animated-tech-edu`; create files with absolute paths when scaffolding.
+
+## Anti-patterns (reject these)
+
+- Autoplaying infinite loops that teach nothing
+- Wall of text beside a static image labeled “animation”
+- Step buttons that remount the whole page
+- Unlabeled boxes and arrows
+- 3D scenes for 2D concepts
+- Ignoring mobile or reduced-motion users
+- Hardcoding lesson copy only inside components with no content layer
+
+## Reference files
+
+- `references/stack.md` — libraries, versions guidance, install commands
+- `references/lesson-patterns.md` — scene recipes for CS/systems topics
+- `references/quality-rubric.md` — ship / no-ship checklist
+
+## Default first demo lesson
+
+If the user has no topic yet, ship a **Buffer Pool: Pages vs Frames** micro-lesson (pages, frames, page table, pin, dirty, eviction) with 5–7 scrubbable steps — it exercises diagrams, state, and transport controls.

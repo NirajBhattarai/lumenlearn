@@ -31,7 +31,8 @@ import {
 } from "@xyflow/react";
 import type { CachePolicyVisualProps } from "@/types/lesson";
 import { simulatePolicy } from "@/lib/cache-policies/simulate";
-import { POLICY_META } from "@/lib/cache-policies/types";
+import { POLICY_MARK, POLICY_META } from "@/lib/cache-policies/types";
+import { MarkImage } from "@/components/ui/MarkImage";
 import {
   DEFAULT_CAPACITY,
   intentAt,
@@ -372,26 +373,42 @@ function CacheFlowInner({
         />
       </ReactFlow>
 
-      <button
-        type="button"
-        title={`About ${meta.short}`}
-        aria-label={`About ${meta.short}`}
-        aria-haspopup="dialog"
-        aria-expanded={infoOpen}
-        onClick={() => {
-          setPlaying(false);
-          setInfoOpen(true);
-        }}
-        className="absolute left-3 top-14 z-10 inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] border border-border bg-surface/95 text-muted shadow-[var(--shadow-stage)] backdrop-blur-sm transition-colors hover:border-border-strong hover:text-foreground"
-      >
-        <Info className="h-3.5 w-3.5" aria-hidden />
-      </button>
+      <div className="absolute left-3 top-14 z-10 flex max-w-[min(92vw,22rem)] items-start gap-2 sm:left-4 sm:top-[3.25rem]">
+        <MarkImage src={POLICY_MARK[policy]} size={48} className="rounded-[var(--radius-md)] shadow-[var(--shadow-stage)]" />
+        <div className="rounded-[var(--radius-md)] border border-border bg-surface/95 px-2.5 py-2 shadow-[var(--shadow-stage)] backdrop-blur-sm">
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <p className="text-eyebrow">{meta.name}</p>
+              <p className="mt-0.5 text-[12px] font-medium text-foreground">{meta.short}</p>
+            </div>
+            <button
+              type="button"
+              title={`About ${meta.short}`}
+              aria-label={`About ${meta.short}`}
+              aria-haspopup="dialog"
+              aria-expanded={infoOpen}
+              onClick={() => {
+                setPlaying(false);
+                setInfoOpen(true);
+              }}
+              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-border text-muted hover:text-foreground"
+            >
+              <Info className="h-3.5 w-3.5" aria-hidden />
+            </button>
+          </div>
+          <p className="mt-1 text-[11px] leading-snug text-muted">{meta.rule}</p>
+        </div>
+      </div>
 
       <Modal
         open={infoOpen}
         onClose={() => setInfoOpen(false)}
         title={`${meta.name} · ${meta.short}`}
       >
+        <div className="mb-3 flex items-center gap-3">
+          <MarkImage src={POLICY_MARK[policy]} size={56} className="rounded-[var(--radius-md)]" />
+          <p className="text-sm font-medium text-foreground">{meta.short}</p>
+        </div>
         <p className="text-sm leading-relaxed text-muted">{meta.rule}</p>
         <p className="mt-3 text-[12px] leading-relaxed text-subtle">
           This lab shows the victim rule on a 4-frame pool. Wikipedia has the

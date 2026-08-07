@@ -15,6 +15,7 @@ import {
   timelineFromBeats,
 } from "@/lib/animation";
 import { layoutLinkedList } from "@/lib/visualization";
+import { MarkImage } from "@/components/ui/MarkImage";
 import { cn } from "@/lib/cn";
 
 export type StructuresVisualProps = {
@@ -111,19 +112,22 @@ export function StructuresScene({
 
   return (
     <div className="flex h-full min-h-[320px] w-full flex-col gap-3 p-3 sm:p-4">
-      {annotation ? (
-        <motion.p
-          key={annotation}
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={animPresets.fade(1)}
-          className="text-center text-sm font-medium text-accent"
-        >
-          {annotation}
-        </motion.p>
-      ) : (
-        <div className="h-5" />
-      )}
+      <div className="flex items-start gap-2.5">
+        <MarkImage src="/marks/mark-linear.jpg" size={40} className="rounded-[var(--radius-md)]" />
+        {annotation ? (
+          <motion.p
+            key={annotation}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={animPresets.fade(1)}
+            className="pt-1 text-sm font-medium text-accent"
+          >
+            {annotation}
+          </motion.p>
+        ) : (
+          <div className="h-5" />
+        )}
+      </div>
 
       {showInsertAnim ? (
         <section className="flex min-h-[200px] flex-1 flex-col rounded-[var(--radius-lg)] border border-border bg-surface p-3">

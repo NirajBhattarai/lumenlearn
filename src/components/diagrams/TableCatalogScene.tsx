@@ -41,6 +41,7 @@ import { prefersReducedMotion } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
+import { MarkImage } from "@/components/ui/MarkImage";
 import { buildCatalogFlowGraph } from "./catalog-flow/buildGraph";
 import { CatalogSelectContext, catalogNodeTypes } from "./catalog-flow/nodes";
 
@@ -360,12 +361,19 @@ function CatalogFlowInner({ teach }: TableCatalogVisualProps) {
         </div>
       </Modal>
 
-      {teach ? (
-        <div className="pointer-events-none absolute left-3 top-14 z-10 mt-10 max-w-[min(92vw,22rem)] rounded-[var(--radius-md)] border border-border bg-surface/90 px-2.5 py-2 backdrop-blur-sm sm:left-14 sm:top-3 sm:mt-0">
-          <p className="text-eyebrow">{teach.title}</p>
-          <p className="mt-1 text-[11px] leading-snug text-muted">{teach.body}</p>
-        </div>
-      ) : null}
+      <div className="pointer-events-none absolute left-3 top-14 z-10 flex max-w-[min(92vw,26rem)] items-start gap-2 sm:left-4">
+        <MarkImage
+          src="/marks/mark-catalog.jpg"
+          size={48}
+          className="pointer-events-none rounded-[var(--radius-md)] shadow-[var(--shadow-stage)]"
+        />
+        {teach ? (
+          <div className="rounded-[var(--radius-md)] border border-border bg-surface/90 px-2.5 py-2 backdrop-blur-sm">
+            <p className="text-eyebrow">{teach.title}</p>
+            <p className="mt-1 text-[11px] leading-snug text-muted">{teach.body}</p>
+          </div>
+        ) : null}
+      </div>
 
       <div className="pointer-events-none absolute inset-x-3 bottom-3 z-10 sm:max-w-[min(100%,52rem)]">
         <div className="pointer-events-auto rounded-[var(--radius-lg)] border border-border bg-surface/95 p-2.5 shadow-[var(--shadow-stage)] backdrop-blur-sm">

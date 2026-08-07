@@ -1,7 +1,14 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { subjects } from "@/content/subjects";
-import { getLessonsForSubject } from "@/content/lessons";
+import { getLessonsForSubject, lessonsBySlug } from "@/content/lessons";
+import {
+  lessonChip,
+  lessonMark,
+  lessonSee,
+  subjectHero,
+  subjectTracks,
+} from "@/content/subject-tracks";
+import { SubjectMap, type MapChapter } from "@/components/subjects/SubjectMap";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -18,40 +25,59 @@ export default async function SubjectPage({ params }: Props) {
   const subject = subjects.find((s) => s.slug === slug);
   if (!subject) notFound();
 
-  const lessons = getLessonsForSubject(slug);
+  const catalog = getLessonsForSubject(slug);
+  const tracks = subjectTracks[slug];
+
+  const chapters: MapChapter[] = tracks
+    ? tracks.map((chapter) => ({
+        id: chapter.id,
+        kicker: chapter.kicker,
+        title: chapter.title,
+        blurb: chapter.blurb,
+        mark: chapter.mark,
+        variantHub: chapter.variantHub,
+        lessons: chapter.lessonSlugs
+          .map((lessonSlug) => {
+            const lesson = lessonsBySlug[lessonSlug];
+            if (!lesson) return null;
+            return {
+              slug: lesson.slug,
+              title: lesson.title,
+              summary: lesson.summary,
+              level: lesson.level,
+              steps: lesson.steps.length,
+              see: lessonSee[lesson.slug] ?? lesson.summary,
+              chip: lessonChip[lesson.slug],
+              mark: lessonMark[lesson.slug],
+            };
+          })
+          .filter((x): x is NonNullable<typeof x> => x != null),
+      }))
+    : [
+        {
+          id: "all",
+          kicker: "Path",
+          title: "Lessons",
+          blurb: subject.description,
+          lessons: catalog.map((lesson) => ({
+            slug: lesson.slug,
+            title: lesson.title,
+            summary: lesson.summary,
+            level: lesson.level,
+            steps: lesson.steps.length,
+            see: lessonSee[lesson.slug] ?? lesson.summary,
+            chip: lessonChip[lesson.slug],
+            mark: lessonMark[lesson.slug],
+          })),
+        },
+      ];
 
   return (
-    <div className="space-y-8">
-      <div>
-        <p className="text-eyebrow">Subject</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
-          {subject.title}
-        </h1>
-        <p className="mt-2 max-w-2xl text-muted">{subject.description}</p>
-      </div>
-
-      {lessons.length === 0 ? (
-        <p className="text-sm text-subtle">Lessons coming soon.</p>
-      ) : (
-        <ol className="divide-y divide-border border-y border-border">
-          {lessons.map((l, i) => (
-            <li key={l.slug}>
-              <Link href={`/lessons/${l.slug}`} className="group block py-4">
-                <p className="text-eyebrow">
-                  Lesson {String(l.order ?? i + 1).padStart(2, "0")}
-                </p>
-                <p className="mt-1 text-[15px] font-medium text-foreground group-hover:text-accent">
-                  {l.title}
-                </p>
-                <p className="mt-1 max-w-2xl text-sm text-muted">{l.summary}</p>
-                <p className="mt-2 font-mono text-xs text-subtle group-hover:text-accent">
-                  {l.steps.length} steps →
-                </p>
-              </Link>
-            </li>
-          ))}
-        </ol>
-      )}
-    </div>
+    <SubjectMap
+      subjectTitle={subject.title}
+      subjectDescription={subject.description}
+      heroSrc={subjectHero[slug]}
+      chapters={chapters}
+    />
   );
 }

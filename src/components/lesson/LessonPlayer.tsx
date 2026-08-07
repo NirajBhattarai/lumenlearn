@@ -16,6 +16,7 @@ import { CachePolicyScene } from "@/components/diagrams/CachePolicyScene";
 import { DiskOrientedScene } from "@/components/diagrams/DiskOrientedScene";
 import { StructuresScene } from "@/components/diagrams/StructuresScene";
 import { TableCatalogScene } from "@/components/diagrams/TableCatalogScene";
+import { PageGuardScene } from "@/components/diagrams/PageGuardScene";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
 import { Panel } from "@/components/ui/Panel";
@@ -27,6 +28,9 @@ import {
   type PlaybackSpeed,
 } from "@/lib/animation";
 import { prefersReducedMotion } from "@/lib/motion";
+import { markLessonVisited } from "@/lib/progress";
+import { lessonMark } from "@/content/subject-tracks";
+import { MarkImage } from "@/components/ui/MarkImage";
 import { cn } from "@/lib/cn";
 
 type Props = {
@@ -43,10 +47,15 @@ export function LessonPlayer({ lesson }: Props) {
   const step = lesson.steps[stepIndex];
   const stageOwnsChrome =
     step.visual.component === "CachePolicyScene" ||
-    step.visual.component === "TableCatalogScene";
+    step.visual.component === "TableCatalogScene" ||
+    step.visual.component === "PageGuardScene";
   const total = lesson.steps.length;
   const progress = ((stepIndex + 1) / total) * 100;
   const reduceMotion = prefersReducedMotion();
+
+  useEffect(() => {
+    markLessonVisited(lesson.slug);
+  }, [lesson.slug]);
 
   const goTo = useCallback(
     (index: number) => {
@@ -78,7 +87,8 @@ export function LessonPlayer({ lesson }: Props) {
     // These scenes own their own play / step controls.
     if (
       step.visual.component === "CachePolicyScene" ||
-      step.visual.component === "TableCatalogScene"
+      step.visual.component === "TableCatalogScene" ||
+      step.visual.component === "PageGuardScene"
     ) {
       setPlaying(false);
       return;
@@ -157,6 +167,9 @@ export function LessonPlayer({ lesson }: Props) {
     }
     if (step.visual.component === "TableCatalogScene") {
       return <TableCatalogScene {...step.visual.props} />;
+    }
+    if (step.visual.component === "PageGuardScene") {
+      return <PageGuardScene {...step.visual.props} />;
     }
     return null;
   }, [step.visual]);
@@ -289,14 +302,23 @@ export function LessonPlayer({ lesson }: Props) {
         </div>
 
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-3 px-3 py-3 sm:px-4">
-          <Link
-            href={`/subjects/${lesson.subjectSlug}`}
-            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-[var(--radius-md)] border border-border bg-surface/90 px-2.5 py-1.5 text-xs text-muted backdrop-blur-sm transition-colors hover:text-foreground"
-          >
-            <ChevronLeft className="h-3.5 w-3.5" />
-            {lesson.subject}
-          </Link>
-          <p className="pointer-events-none font-mono text-[11px] text-subtle">
+          <div className="flex min-w-0 items-center gap-2">
+            {lessonMark[lesson.slug] ? (
+              <MarkImage
+                src={lessonMark[lesson.slug]!}
+                size={32}
+                className="pointer-events-none hidden shadow-[var(--shadow-stage)] sm:block"
+              />
+            ) : null}
+            <Link
+              href={`/subjects/${lesson.subjectSlug}`}
+              className="pointer-events-auto inline-flex items-center gap-1.5 rounded-[var(--radius-md)] border border-border bg-surface/90 px-2.5 py-1.5 text-xs text-muted backdrop-blur-sm transition-colors hover:text-foreground"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+              {lesson.subject}
+            </Link>
+          </div>
+          <p className="pointer-events-none truncate font-mono text-[11px] text-subtle">
             {stageOwnsChrome
               ? lesson.title
               : `${String(stepIndex + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`}
@@ -380,7 +402,11 @@ export function LessonPlayer({ lesson }: Props) {
   return (
     <div className="mx-auto flex w-full max-w-[var(--max-width)] flex-col gap-4">
       <header className="flex flex-wrap items-end justify-between gap-3">
-        <div>
+        <div className="flex min-w-0 items-start gap-3">
+          {lessonMark[lesson.slug] ? (
+            <MarkImage src={lessonMark[lesson.slug]!} size={56} className="mt-1 rounded-[var(--radius-md)]" />
+          ) : null}
+          <div>
           <p className="text-eyebrow">
             {lesson.subject} · {lesson.level}
           </p>
@@ -388,6 +414,7 @@ export function LessonPlayer({ lesson }: Props) {
             {lesson.title}
           </h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">{lesson.summary}</p>
+          </div>
         </div>
         <p className="font-mono text-xs text-subtle">
           {String(stepIndex + 1).padStart(2, "0")} /{" "}

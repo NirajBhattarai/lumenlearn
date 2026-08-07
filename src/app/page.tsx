@@ -1,6 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { subjects } from "@/content/subjects";
+import { subjectHero, subjectTracks } from "@/content/subject-tracks";
 import { getAllLessons } from "@/content/lessons";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 
@@ -26,7 +28,7 @@ export default function HomePage() {
               <ArrowRight className="h-4 w-4" />
             </ButtonLink>
           ) : null}
-          <ButtonLink href="/subjects/data-structures" variant="secondary">
+          <ButtonLink href="/subjects" variant="secondary">
             Browse subjects
           </ButtonLink>
         </div>
@@ -67,34 +69,55 @@ export default function HomePage() {
       </section>
 
       <section>
-        <h2 className="text-sm font-semibold tracking-tight text-foreground">
-          Subjects
-        </h2>
-        <ul className="mt-4 space-y-0 divide-y divide-border border-y border-border">
-          {subjects.map((s) => (
-            <li key={s.slug}>
-              <Link
-                href={
-                  s.lessonSlugs.length
-                    ? `/subjects/${s.slug}`
-                    : "/lessons/pages-vs-frames"
-                }
-                className="group block py-4"
-              >
-                <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="text-[15px] font-medium text-foreground group-hover:text-accent">
-                    {s.title}
-                  </h3>
-                  <span className="font-mono text-xs text-subtle">
-                    {s.lessonSlugs.length
-                      ? `${s.lessonSlugs.length} lesson${s.lessonSlugs.length === 1 ? "" : "s"}`
-                      : "soon"}
-                  </span>
-                </div>
-                <p className="mt-1 max-w-2xl text-sm text-muted">{s.description}</p>
-              </Link>
-            </li>
-          ))}
+        <div className="flex items-baseline justify-between gap-4">
+          <h2 className="text-sm font-semibold tracking-tight text-foreground">
+            Subjects
+          </h2>
+          <Link href="/subjects" className="font-mono text-[11px] text-subtle hover:text-accent">
+            View all →
+          </Link>
+        </div>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+          {subjects.map((s) => {
+            const layers = subjectTracks[s.slug] ?? [];
+            const hero = subjectHero[s.slug];
+            return (
+              <li key={s.slug}>
+                <Link
+                  href={`/subjects/${s.slug}`}
+                  className="group block overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface transition-colors hover:border-border-strong"
+                >
+                  {hero ? (
+                    <div className="relative aspect-[16/7] bg-stage">
+                      <Image
+                        src={hero}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 640px) 22rem, 100vw"
+                      />
+                    </div>
+                  ) : null}
+                  <div className="p-4">
+                    <div className="flex items-baseline justify-between gap-4">
+                      <h3 className="text-[15px] font-medium text-foreground group-hover:text-accent">
+                        {s.title}
+                      </h3>
+                      <span className="font-mono text-xs text-subtle">
+                        {s.lessonSlugs.length} labs
+                      </span>
+                    </div>
+                    <p className="mt-1 text-sm text-muted">{s.description}</p>
+                    {layers.length > 0 ? (
+                      <p className="mt-3 font-mono text-[10px] text-subtle">
+                        {layers.map((l) => l.kicker).join("  →  ")}
+                      </p>
+                    ) : null}
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </section>
     </div>

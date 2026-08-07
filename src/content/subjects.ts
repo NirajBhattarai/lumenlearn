@@ -10,6 +10,7 @@ export const subjects: Subject[] = [
       "disk-oriented-dbms",
       "pages-vs-frames",
       "table-catalog-storage",
+      "page-guard-raii",
       "cache-lru",
       "cache-mru",
       "cache-lru-k",
